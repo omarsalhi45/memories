@@ -9,8 +9,9 @@ import { createPost, updatePost } from '../../actions/posts'
 function Form({currentId, setCurrentId}) {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const user = JSON.parse(localStorage.getItem('profile'))
     const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null)
-    const [postData, setPostData] = useState({ creator: '', title: '', message: '', tags: '', selectedFile: '' })
+    const [postData, setPostData] = useState({  title: '', message: '', tags: '', selectedFile: '' })
     useEffect(() =>  {
         if (post) setPostData(post)
     }, [post])
@@ -21,11 +22,11 @@ function Form({currentId, setCurrentId}) {
         e.preventDefault();
 
         if (currentId) {
-            dispatch(updatePost(currentId, postData));   
+            dispatch(updatePost(currentId, {...postData,name : user?.result?.name }));   
                   
         }
         else {
-            dispatch(createPost(postData));
+            dispatch(createPost({...postData,name : user?.result?.name }));
             
         }
         clear()
@@ -33,14 +34,21 @@ function Form({currentId, setCurrentId}) {
     }
     const clear = () => {
             setCurrentId(0)
-            setPostData({ creator: '', title: '', message: '', tags: '', selectedFile: '' })
+            setPostData({  title: '', message: '', tags: '', selectedFile: '' })
     }
-
+    if(!user?.result?.name){
+        return (
+            <Paper className={classes.paper}>
+                <Typography variant="h6" align="center">
+                    Inscrivez vous pour pouvoir créez votre propre mémoire
+                </Typography>
+            </Paper>
+        )
+    }
     return (
         <Paper className={classes.paper}>
             <form autoComplete="off" noValidate className={`${classes.form} ${classes.root}`} onSubmit={handleSubmit}>
                 <Typography variant="h6"> {currentId ? 'Editing' : 'Creating'} a Memory </Typography>
-                <TextField name="creator" variant="outlined" label="creator" fullWidth value={postData.creator} onChange={(e) => setPostData({ ...postData, creator: e.target.value })} />
                 <TextField name="Title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} />
                 <TextField name="Message" variant="outlined" label="Message" fullWidth value={postData.message} onChange={(e) => setPostData({ ...postData, message: e.target.value })} />
                 <TextField name="Tags" variant="outlined" label="Tags" fullWidth value={postData.tags} onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(',') })} />
