@@ -11,56 +11,68 @@ export const getPosts = async (req, res) => {
     }
 }
 
+export const getPostsBySearch = async (req, res) => {
+    const { searchQuery, tags } = req.query
+    try {
+        const title = new RegExp(searchQuery, 'i')
+
+        const posts = await PostMessage.find({ $or: [{ title }, { tags: { $in: tags.split(',') } }] }) // $or soit trouvé le query ou bien le tag // $in si il y a un tag dans tout les tags 
+
+        res.json({data : posts})
+    } catch (error) {
+        res.status(404).json({message : error.message})
+    }
+}
 export const createPost = async (req, res) => {
-        const  post = req.body;
+    const post = req.body;
 
-        const newPost = new PostMessage( {...post , creator : req.userId,createdAt : new Date().toISOString()})
-        try {
-            await newPost.save();
-            res.status(201).json(newPost)
+    const newPost = new PostMessage({ ...post, creator: req.userId, createdAt: new Date().toISOString() })
+    try {
+        await newPost.save();
+        res.status(201).json(newPost)
 
-        } catch (error) {
-            res.status(409).json({ message: error.message })
+    } catch (error) {
+        res.status(409).json({ message: error.message })
 
-        }
+    }
 
 }
 
-export const updatePost= async (req,res)=>{
-    const {id:_id}=req.params;
-    const post= req.body;
-    if(!mongoose.Types.ObjectId.isValid(_id)) return (res.status(404).send('no post with that id'))
-    const updatedPost = await PostMessage.findByIdAndUpdate(_id,post,{new:true})
+export const updatePost = async (req, res) => {
+    const { id: _id } = req.params;
+    const post = req.body;
+    if (!mongoose.Types.ObjectId.isValid(_id)) return (res.status(404).send('no post with that id'))
+    const updatedPost = await PostMessage.findByIdAndUpdate(_id, post, { new: true })
     res.json(updatedPost)
 }
 
 
-export const deletePost= async (req,res)=>{
-    const {id}=req.params;
-    if(!mongoose.Types.ObjectId.isValid(id)) return (res.status(404).send('no post with that id'))
-    await PostMessage.findByIdAndRemove(id) 
-    res.json({message:'post has been deleted'})
+export const deletePost = async (req, res) => {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) return (res.status(404).send('no post with that id'))
+    await PostMessage.findByIdAndRemove(id)
+    res.json({ message: 'post has been deleted' })
 
 }
 
-export const likePost =async(req,res)=>{
-    const {id}=req.params;
-    if(!req.userId) return res.json({message:'Unauthenticated'})
+export const likePost = async (req, res) => {
+    const { id } = req.params;
+    if (!req.userId) return res.json({ message: 'Unauthenticated' })
 
-    if(!mongoose.Types.ObjectId.isValid(id)) return (res.status(404).send('no post with that id'))
+    if (!mongoose.Types.ObjectId.isValid(id)) return (res.status(404).send('no post with that id'))
 
-    const post= await PostMessage.findById(id)
+    const post = await PostMessage.findById(id)
 
-    const index=post.likes.findIndex((id)=> id ===String(req.userId))
-    if(index === -1){
+    const index = post.likes.findIndex((id) => id === String(req.userId))
+    if (index === -1) {
         //to like the post...does not exist
         post.likes.push(req.userId)
     }
-    else{
-        post.likes = post.likes.filter((id)=>id !== String(req.userId))
+    else {
+        post.likes = post.likes.filter((id) => id !== String(req.userId))
     }
 
-    const updatedPost=await PostMessage.findByIdAndUpdate(id,post,{new :true})
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true })
 
     res.json(updatedPost)
 
