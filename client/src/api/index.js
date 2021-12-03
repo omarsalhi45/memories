@@ -16,6 +16,7 @@ API.interceptors.request.use((req)=>{
  export const deletePost = (id) => API.delete(`/posts/${id}`)
  export const updatePost = (id,updatedPost) => API.patch(`/posts/${id}`,updatedPost)
  export const likePost = (id) => API.patch(`/posts/${id}/likePost`)
+ export const comment = (value,id) => API.post(`/posts/${id}/commentPost`, {value})
 
 
  export const signIn=(formData)=>API.post('/user/signin',formData)
