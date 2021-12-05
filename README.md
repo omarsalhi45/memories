@@ -1,6 +1,6 @@
 # Memories
 Memories est une application web qui nous donne permet de créer nos mémoires et de les partager entre amis.
-Dans ce projet j’ai utilisé plusieurs technologies :
+Dans ce projet en utilisé plusieurs technologies
 # MERN (MongoDB, Express, ReactsJs, NodeJs) stack
 c'est un stack qui est basé sur du JavaScript
 # Redux
