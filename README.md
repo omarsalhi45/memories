@@ -7,18 +7,18 @@ c'est un stack qui est basé sur du JavaScript
 pour gérer les states pour les rendre plus prédictible et plus traçable.
 # Material UI
 pour la conception des composants d’une manière plus facile  
-# Fonctionnalités 
-# I
-L’ajout d’une mémoire
-# II
-Modification de la mémoire
-# III
-L’authentification par Google
-# IV
-La recherche d’une mémoire
-# V
-La pagination
-# VI
-La possibilité d’aimer les mémoires et du supprimer les mémoires
-# VII
-La possibilité de commenter dans une mémoire
+# Fonctionnalités
+
+I-L’ajout d’une mémoire
+
+II-Modification de la mémoire
+ 
+III-L’authentification par Google
+
+IV-La recherche d’une mémoire
+
+V-La pagination
+
+VI-La possibilité d’aimer les mémoires et du supprimer les mémoires
+
+VII-La possibilité de commenter dans une mémoire
